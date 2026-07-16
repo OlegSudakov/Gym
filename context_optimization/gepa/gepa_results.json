@@ -1,0 +1,76 @@
+{
+  "optimizer": "gepa",
+  "grading_mode": "fraction",
+  "seed_prompt": "Solve the problem.",
+  "baseline_test_acc": 0.6217,
+  "optimized_test_acc": 0.6525,
+  "baseline_val_acc": 0.5808,
+  "optimized_val_acc": 0.6058,
+  "best_prompt": "You will be given exactly one field named `task`.\n\nWhat `task` contains:\n- A user\u2019s underlying request\n- One or more explicit constraints about how the response must be written\n\nYour objective:\nProduce the best possible final answer to the user\u2019s request while satisfying every explicit constraint in `task` exactly.\n\nOutput rule:\n- Return only the answer to the user\u2019s task\n- Do not add analysis, explanations, notes, or meta-commentary unless the task explicitly asks for them\n\nRequired method:\n1. Parse `task` into:\n   - the underlying content objective\n   - all hard constraints\n2. Treat constraints as global and mandatory across the entire response\n3. Preserve constraints that are already satisfiable while fixing any likely violations\n4. Prefer constraint satisfaction over style whenever they conflict\n5. Before finalizing, verify the whole response against every constraint together\n\nConstraint categories you must check carefully:\n- exact starting word requirement\n- exact ending word requirement\n- start and end with the same word\n- exact phrase repetition counts\n- exact word frequency limits such as \u201cless than 3 times\u201d\n- uniqueness constraints such as \u201cno word should be repeated\u201d\n- casing constraints such as:\n  - all lowercase\n  - no capital letters\n  - all English\n- punctuation bans such as forbidding `.` anywhere\n- character-count limits such as \u201cless than 2 letters\u201d\n- formatting constraints such as markdown embedding and no code blocks\n- inclusion constraints such as requiring a palindrome\n- transformation constraints where only one specified word may change\n\nImportant precision rules:\n- Count constraints apply to the entire response, not just one sentence\n- If a word or phrase must appear exactly K times, ensure it appears exactly K times total, including accidental repeats\n- If all words must be unique, repeated function words also violate the rule\n- If lowercase-only is required, avoid any capitals anywhere\n- If no capital letters are allowed, this includes names, sentence starts, headings, and markdown alt text if present\n- If `.` is forbidden, do not use periods anywhere, including abbreviations, ellipses, URLs written plainly, decimal notation, or markdown text that would contain dots\n- If a specific last word is required, that exact final token must be the last word before any allowed closing punctuation, and nothing may follow if the task forbids it\n- If the response must start and end with the same word and also be under a very small letter limit, a one-character response can satisfy both\n- If asked for less than 2 letters, the response must contain at most 1 letter total\n- If asked to include a palindrome, use a clear standalone palindrome such as `level`\n- If asked to repeat a phrase with a single-word substitution, keep every other word identical\n\nTask-specific domain knowledge to retain:\n- For Linux requests about checking directory sizes, `du` is the relevant command family\n- Useful forms include:\n  - `du -sh` for human-readable size of a path\n  - `du -s` for summarized size\n  - `du --max-depth=1` to compare immediate subdirectories\n- When uniqueness constraints are strict, normal prose often fails because common words repeat; use radically compressed outputs, command fragments, paths, numerals, symbols, and line breaks to avoid repetition\n- For markdown image embedding tasks, the required wrapper is:\n  - start with `![alt](`\n  - end with `)`\n- Do not use code blocks if the task forbids them\n- A bitmap image URL of the described type uses 16 rows of 16 base-10 digits separated by hyphens\n- Colour key for such bitmap tasks:\n  - 0 black\n  - 1 white\n  - 2 red\n  - 3 green\n  - 4 blue\n  - 5 yellow\n  - 6 magenta\n  - 7 cyan\n  - 8 orange\n  - 9 gray\n\nFailure patterns to avoid:\n- Satisfying content but missing global count constraints\n- Accidentally repeating a required keyword too many times\n- Violating punctuation bans with otherwise good prose\n- Forgetting that markdown or URLs can break casing or punctuation constraints\n- Giving a valid short answer that does not satisfy the required start/end condition\n- Adding near-matching phrases that invalidate an \u201cexactly K times\u201d constraint\n\nRecommended solving strategy:\n1. Identify the hardest constraint first\n2. Design the response shape around that constraint\n3. Fill in only the minimum content needed to answer the user\n4. Perform a final literal check for:\n   - repeated words\n   - forbidden characters\n   - capitalization violations\n   - exact first and last tokens\n   - total phrase counts\n\nFinal instruction:\nReturn a single response that directly answers the user\u2019s `task` and satisfies all explicit constraints exactly",
+  "train_n": 145,
+  "val_n": 200,
+  "test_n": 200,
+  "max_calls": 2000,
+  "curve": [
+    {
+      "candidate": 0,
+      "eval_calls": 0,
+      "val_acc": 0.5983333333333334,
+      "topline": 0.5983333333333334
+    },
+    {
+      "candidate": 1,
+      "eval_calls": 212,
+      "val_acc": 0.5825,
+      "topline": 0.5983333333333334
+    },
+    {
+      "candidate": 2,
+      "eval_calls": 418,
+      "val_acc": 0.6058333333333333,
+      "topline": 0.6058333333333333
+    },
+    {
+      "candidate": 3,
+      "eval_calls": 624,
+      "val_acc": 0.5933333333333334,
+      "topline": 0.6058333333333333
+    },
+    {
+      "candidate": 4,
+      "eval_calls": 854,
+      "val_acc": 0.605,
+      "topline": 0.6058333333333333
+    },
+    {
+      "candidate": 5,
+      "eval_calls": 1060,
+      "val_acc": 0.6483333333333333,
+      "topline": 0.6483333333333333
+    },
+    {
+      "candidate": 6,
+      "eval_calls": 1296,
+      "val_acc": 0.615,
+      "topline": 0.6483333333333333
+    },
+    {
+      "candidate": 7,
+      "eval_calls": 1508,
+      "val_acc": 0.6066666666666667,
+      "topline": 0.6483333333333333
+    },
+    {
+      "candidate": 8,
+      "eval_calls": 1726,
+      "val_acc": 0.6166666666666667,
+      "topline": 0.6483333333333333
+    },
+    {
+      "candidate": 9,
+      "eval_calls": 1932,
+      "val_acc": 0.5991666666666666,
+      "topline": 0.6483333333333333
+    }
+  ]
+}

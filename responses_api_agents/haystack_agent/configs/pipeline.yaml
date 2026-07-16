@@ -18,28 +18,9 @@ components:
       required_variables: null
       state_schema: {}
       streaming_callback: null
-      system_prompt: You are a helpful assistant. Always use the get_weather tool when the
-        user asks about weather. When you have enough information, reply with a concise
-        final answer and no further tool calls.
+      system_prompt: null
       tool_concurrency_limit: 4
       tool_streaming_callback_passthrough: false
-      tools:
-      - data:
-          async_function: null
-          description: Get the current weather for a given city.
-          function: responses_api_agents.haystack_agent.example_tools.get_weather
-          inputs_from_state: null
-          name: get_weather
-          outputs_to_state: null
-          outputs_to_string: null
-          parameters:
-            properties:
-              city:
-                type: string
-            required:
-            - city
-            type: object
-        type: haystack.tools.tool.Tool
       user_prompt: null
     type: haystack.components.agents.agent.Agent
 connection_type_validation: true

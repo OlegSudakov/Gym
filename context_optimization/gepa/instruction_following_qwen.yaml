@@ -1,0 +1,49 @@
+instruction_following:
+  resources_servers:
+    instruction_following:
+      entrypoint: app.py
+      domain: instruction_following
+      verified: false
+      description: Instruction following datasets targeting IFEval and IFBench style instruction following capabilities
+      value: Improve IFEval and IFBench
+      
+policy_model:
+  responses_api_models:
+    vllm_model:
+      entrypoint: app.py
+      base_url: ${policy_base_url}
+      api_key: ${policy_api_key}
+      model: ${policy_model_name}
+      return_token_id_information: false
+      uses_reasoning_parser: true
+      uses_interleaved_reasoning: true
+      chat_template_kwargs: null
+      extra_body: null
+      default_headers: {}
+
+instruction_following_haystack_agent:
+  responses_api_agents:
+    haystack_agent:
+      entrypoint: app.py
+      resources_server:
+        type: resources_servers
+        name: instruction_following
+      model_server:
+        type: responses_api_models
+        name: policy_model
+      pipeline_yaml: configs/pipeline.yaml
+      datasets:
+      - name: train
+        type: train
+        jsonl_fpath: resources_servers/instruction_following/data/train.jsonl
+        gitlab_identifier:
+          dataset_name: instruction_following
+          version: 0.0.1
+          artifact_fpath: instruction_following.jsonl
+        huggingface_identifier:
+          repo_id: nvidia/Nemotron-RL-instruction_following
+          artifact_fpath: instruction_following.jsonl
+        license: Apache 2.0
+      - name: example
+        type: example
+        jsonl_fpath: resources_servers/instruction_following/data/example.jsonl
